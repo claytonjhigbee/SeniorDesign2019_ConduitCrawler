@@ -4,6 +4,7 @@ Import necessary libraries and folders
 """
 #  Imports from Arduino Related files
 import time
+import re
 start_time = time.time()
 import sys, serial, argparse
 from time import sleep
@@ -26,8 +27,58 @@ Z = 0
 
 #####################
 
-# Define point updater object
-def update_line(num, iterator, scatter,ax):
+
+# plot class
+class AnalogPlot:
+    # constr
+    def __init__(self, strPort, maxLen):
+        # open serial port
+        self.ser = serial.Serial(strPort, 9600)
+
+        self.ax = deque([0.0] * maxLen)
+        self.ay = deque([0.0] * maxLen)
+        self.maxLen = maxLen
+        line = self.ser.readline()
+
+    # add to buffer
+    def addToBuf(self, buf, val):
+        if len(buf) < self.maxLen:
+            buf.append(val)
+        else:
+            buf.pop()
+            buf.appendleft(val)
+
+    # add data
+    def add(self, data):
+        assert (len(data) == 2)
+        self.addToBuf(self.ax, data[0])
+        self.addToBuf(self.ay, data[1])
+
+    # update plot
+    def update(self, frameNum, a0, a1):
+        try:
+            line = self.ser.readline()
+            data = [float(val) for val in line.split()]
+            print(data)
+            # print data
+            if (len(data) == 2):
+                self.add(data)
+                a0.set_data(range(self.maxLen), self.ax)
+                a1.set_data(range(self.maxLen), self.ay)
+        except KeyboardInterrupt:
+            print('exiting')
+
+        return a0,
+
+        # clean up
+
+    def close(self):
+        # close serial
+        self.ser.flush()
+        self.ser.close()
+
+    # Define point updater object
+def update_line(num, iterator, scatter,ax,Aport):
     scan = next(iterator)
     """
     Iterator returns 3 arguments:
@@ -40,9 +91,13 @@ def update_line(num, iterator, scatter,ax):
             In millimeter unit. Set to 0 when measurement is invalid. 
     """
     # Pass measurements to related variables
+    line = Aport.readline()
+    line = str(line,"utf-8")
+    angle = int(re.sub("[^0-9]","",line))
+    print(angle)
     theta  = np.array([(np.radians(meas[1])) for meas in scan])
     R = np.array([meas[2] for meas in scan])
-    phi = np.pi/4 # Test value in the phi angle, to be switched with Arduino object value
+    phi = np.deg2rad(angle) # Test value in the phi angle, to be switched with Arduino object value
     
     # Perform Spherical to Cartesian Conversion
     X = R*np.sin(phi)*np.cos(theta)
@@ -51,15 +106,16 @@ def update_line(num, iterator, scatter,ax):
     
     offsets = np.array([X,Y,Z])
     scatter = ax.scatter3D(X, Y, Z)
-    # I don't really understand the set_offsets call. Is this a general matplotlib function that passes arguments?
-    # See this: https://matplotlib.org/api/collections_api.html and the small section on set_offsets()
-    # intens = np.array([meas[0] for meas in scan]) - I dont think we need this argument passed
-    # scatter.set_array(intens) - Or this one
     return scatter, X, Y, Z
 
 
 # Setup Main run object
 def run():
+    strPort = '/dev/ttyACM0'
+    print('reading from serial port %s...' % strPort)
+    Aport = serial.Serial(strPort, 9600)
+
+
     lidar = RPLidar(PORT_NAME) # Connect to the RPLidar Port
     iterator = lidar.iter_scans() # Object to pull scans from the RPLidar
     # An object to collect arduino readings must go here when thats complete!
@@ -73,7 +129,7 @@ def run():
 
     
     # matplotlib animation function
-    ani = animation.FuncAnimation(fig, update_line, fargs=(iterator, scatter, ax), interval=50)
+    ani = animation.FuncAnimation(fig, update_line, fargs=(iterator, scatter, ax,Aport), interval=50)
     """
     animation.FuncAnimation arguments:
     class matplotlib.animation.FuncAnimation(fig, func, frames=None, init_func=None, fargs=None, save_count=None, **kwargs)

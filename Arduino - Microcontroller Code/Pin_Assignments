@@ -1,0 +1,23 @@
+This is file for Pin Assignments
+L298N H Bridge // Arduino // Atmega328P
+EnA // 10 // PB2(PWM)
+EnB // 5 // PD5(PWM)
+Suggest: (In1 // 11 // PB3)        (In1 // 9 // PB1) (NEEDS TO BE CHANGED! Need to impliment on different pin))
+In2 // 8 // PB0
+In3 // 7 // PD7
+In4 // 6 // PD6
+
+
+FB Servo // Atmega328P
+FB // PD2 (Interrupt)
+Control // PB1 (PWM)
+
+
+Possible PWM Pins:
+Arduino - Atmega328
+11 - PB3
+10 - PB2 used
+9 - PB1 used
+6 - PD6
+5 - PD5 used
+3 - PD3
