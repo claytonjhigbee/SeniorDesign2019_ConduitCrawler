@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="16d2fc1b-f94a-4650-9fcb-df3ca377e23e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Arduino - Microcontroller Code/Arduinotest/Arduinotest.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Arduino - Microcontroller Code/Arduinotest/Arduinotest.ino" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Arduino - Microcontroller Code/DCMotorDriverV4/DCMotorDriverV4.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Arduino - Microcontroller Code/DCMotorDriverV4/DCMotorDriverV4.ino" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Arduino - Microcontroller Code/FBServoSerialReadV1/FBServoSerialReadV1.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Arduino - Microcontroller Code/FBServoSerialReadV1/FBServoSerialReadV1.ino" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Arduino - Microcontroller Code/Write_to_ArduinoV1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Arduino - Microcontroller Code/Write_to_ArduinoV1.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,31 +12,18 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ConduitCrawler_V1/CC_Main_V7.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="179">
+            <state relative-caret-position="-536">
               <caret line="97" column="45" selection-start-line="97" selection-start-column="45" selection-end-line="97" selection-end-column="45" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Arduino - Microcontroller Code/DCMotorDriverV4/DCMotorDriverV4.ino">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="25" column="20" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Arduino - Microcontroller Code/FBServoSerialReadV1/FBServoSerialReadV1.ino">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="690">
-              <caret line="46" selection-start-line="46" selection-end-line="46" />
-            </state>
-          </provider>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ConduitCrawler_V1/CC_Main_V8.py">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -102,6 +85,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -118,7 +102,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -294,6 +277,14 @@
       <option name="presentableId" value="Default" />
       <updated>1549062341688</updated>
     </task>
+    <task id="LOCAL-00001" summary="Upload today">
+      <created>1555619370942</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1555619370944</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -336,6 +327,10 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout-to-restore>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Upload today" />
+    <option name="LAST_COMMIT_MESSAGE" value="Upload today" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -679,10 +674,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ConduitCrawler_V1/CC_Main_V7.py">
+    <entry file="file://$PROJECT_DIR$/Arduino - Microcontroller Code/FBServoSerialReadV1/FBServoSerialReadV1.ino">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="97" column="45" selection-start-line="97" selection-start-column="45" selection-end-line="97" selection-end-column="45" />
+        <state relative-caret-position="690">
+          <caret line="46" selection-start-line="46" selection-end-line="46" />
         </state>
       </provider>
     </entry>
@@ -693,10 +688,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Arduino - Microcontroller Code/FBServoSerialReadV1/FBServoSerialReadV1.ino">
+    <entry file="file://$PROJECT_DIR$/ConduitCrawler_V1/CC_Main_V8.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="690">
-          <caret line="46" selection-start-line="46" selection-end-line="46" />
+        <state relative-caret-position="90">
+          <caret line="7" column="24" lean-forward="true" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ConduitCrawler_V1/CC_Main_V7.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-536">
+          <caret line="97" column="45" selection-start-line="97" selection-start-column="45" selection-end-line="97" selection-end-column="45" />
         </state>
       </provider>
     </entry>
