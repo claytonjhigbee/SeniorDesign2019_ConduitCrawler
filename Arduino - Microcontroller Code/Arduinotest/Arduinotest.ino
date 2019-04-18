@@ -3,20 +3,21 @@ int val = 0;
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop() {
-  if(testvariable >= 180){
-    testvariable = 1;
+  if(testvariable >= 135){
+    testvariable = 45;
   }
   else{
     testvariable = testvariable + 1;
   }
   val = testvariable;
-Serial.print(val);
-Serial.print(" ");
-Serial.print(val);
-Serial.print("\n");
+Serial.println(val);
 delay(25);
 }
+
+void serialEvent(){
+  Serial.println("It worked!");
+  }

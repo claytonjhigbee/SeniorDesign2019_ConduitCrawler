@@ -81,13 +81,13 @@ void goBackward()   //run both motors backward in the same direction
 
 void RunServo(){
   analogWrite(FBServo,175);
-if (pwm_value >= 500)
+if (pwm_value >= 330)
 {
   analogWrite(FBServo,0);
   }
   delay(75);
-analogWrite(FBServo,200);
-if (pwm_value <= 400)
+analogWrite(FBServo,230);
+if (pwm_value <= 20)
 {
   analogWrite(FBServo,0);
   }
