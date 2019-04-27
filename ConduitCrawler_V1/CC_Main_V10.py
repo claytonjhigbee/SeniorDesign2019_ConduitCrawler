@@ -3,14 +3,9 @@
 Import necessary libraries and folders
 """
 #  Imports from Arduino Related files
-import time
-import re
-start_time = time.time()
 import sys, serial, argparse
-from time import sleep
 from collections import deque
-import matplotlib.animation as animation
-
+import re
 #  Imports Related to RPLidar files
 from rplidar import RPLidar
 import matplotlib.pyplot as plt
@@ -20,64 +15,61 @@ from mpl_toolkits import mplot3d
 
 #  Declarations/Variables
 PORT_NAME = '/dev/ttyUSB0' #  RPLidar Port Name
-DMAX = 500 #  ?
-IMIN = 0 #  ?
-IMAX = 50 #  ?
-Z = 0
+strPort = '/dev/ttyACM0' # MCU Port Name
 
 #####################
 
 
 # plot class
-class AnalogPlot:
-    # constr
-    def __init__(self, strPort, maxLen):
-        # open serial port
-        self.ser = serial.Serial(strPort, 115200)
-        self.ax = deque([0.0] * maxLen)
-        self.ay = deque([0.0] * maxLen)
-        self.maxLen = maxLen
-        line = self.ser.readline()
-
-    # add to buffer
-    def addToBuf(self, buf, val):
-        if len(buf) < self.maxLen:
-            buf.append(val)
-        else:
-            buf.pop()
-            buf.appendleft(val)
-
-    # add data
-    def add(self, data):
-        assert (len(data) == 2)
-        self.addToBuf(self.ax, data[0])
-        self.addToBuf(self.ay, data[1])
-
-    # update plot
-    def update(self, frameNum, a0, a1):
-        try:
-            line = self.ser.readline()
-            data = [float(val) for val in line.split()]
-            print(data)
-            # print data
-            if (len(data) == 2):
-                self.add(data)
-                a0.set_data(range(self.maxLen), self.ax)
-                a1.set_data(range(self.maxLen), self.ay)
-        except KeyboardInterrupt:
-            print('exiting')
-
-        return a0,
-
-        # clean up
-
-    def close(self):
-        # close serial
-        self.ser.flush()
-        self.ser.close()
+# class AnalogPlot:
+#     # constr
+#     def __init__(self, strPort, maxLen):
+#         # open serial port
+#         self.ser = serial.Serial(strPort, 115200)
+#         self.ax = deque([0.0] * maxLen)
+#         self.ay = deque([0.0] * maxLen)
+#         self.maxLen = maxLen
+#         line = self.ser.readline()
+#
+#     # add to buffer
+#     def addToBuf(self, buf, val):
+#         if len(buf) < self.maxLen:
+#             buf.append(val)
+#         else:
+#             buf.pop()
+#             buf.appendleft(val)
+#
+#     # add data
+#     def add(self, data):
+#         assert (len(data) == 2)
+#         self.addToBuf(self.ax, data[0])
+#         self.addToBuf(self.ay, data[1])
+#
+#     # update plot
+#     def update(self, frameNum, a0, a1):
+#         try:
+#             line = self.ser.readline()
+#             data = [float(val) for val in line.split()]
+#             print(data)
+#             # print data
+#             if (len(data) == 2):
+#                 self.add(data)
+#                 a0.set_data(range(self.maxLen), self.ax)
+#                 a1.set_data(range(self.maxLen), self.ay)
+#         except KeyboardInterrupt:
+#             print('exiting')
+#
+#         return a0,
+#
+#         # clean up
+#
+#     def close(self):
+#         # close serial
+#         self.ser.flush()
+#         self.ser.close()
 
     # Define point updater object
-def update_line(num, iterator, scatter,ax,Aport):
+def update_line(num, iterator,ax,Aport):
     scan = next(iterator)
     """
     Iterator returns 3 arguments:
@@ -118,8 +110,8 @@ def update_line(num, iterator, scatter,ax,Aport):
     ax.set_zlim(-2500, 2500)
     ax.set_xlim(-2500, 2500)
     ax.set_ylim(-2500, 2500)
-    scatter = ax.scatter3D(X, Y, Z)
-    return scatter, X, Y, Z
+    ax.scatter3D(X, Y, Z)
+    return  X, Y, Z
 
 # Define Conduit Crawler Command Objects
 def ccforward():
@@ -148,17 +140,21 @@ def ccstopserial():
 # Setup Main run object
 def run():
     strPort = '/dev/ttyACM0'
-    print('reading from serial port %s...' % strPort)
+    print('MCU read from serial port %s...' % strPort)
     Aport = serial.Serial(strPort, 115200)
-
-
+    print('RPLidar read from serial port %s...' % PORT_NAME)
     lidar = RPLidar(PORT_NAME) # Connect to the RPLidar Port
     iterator = lidar.iter_scans() # Object to pull scans from the RPLidar
     # An object to collect arduino readings must go here when thats complete!
 
+    # Declare empty Cartesien Coordinates
+    X = []
+    Y = []
+    Z = []
+
     fig = plt.figure() # Create a figure object
     ax = fig.add_subplot(111, projection='3d') # Create plot axes object, 3D
-    scatter = ax.scatter3D(0, 0, 0)  # Define 3D Scatter Plot Object, This needs to be assigned to an object?
+    ax.scatter3D(0, 0, 0)  # 3D Scatter Plot, This needs to be assigned to an object?
     ax.set_zlim(-2500, 2500)
     ax.set_xlim(-2500, 2500)
     ax.set_ylim(-2500, 2500)
@@ -169,7 +165,7 @@ def run():
 
     # Begin matplotlib animation function
     # Save up to 50 samples and update interval is every 10ms
-    ani = animation.FuncAnimation(fig, update_line, fargs=(iterator, scatter, ax,Aport), interval=100)
+    ani = animation.FuncAnimation(fig, update_line, fargs=(iterator, ax,Aport), interval=100)
     """
     animation.FuncAnimation arguments:
     class matplotlib.animation.FuncAnimation(fig, func, frames=None, init_func=None, fargs=None, save_count=None, **kwargs)

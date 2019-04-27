@@ -3,9 +3,6 @@ import matplotlib.pyplot as plt
 
 
 def X_Rotate(X, Y, Z, Angle):
-
-
-
     Xnew = np.take(Rotate, 0) * X + np.take(Rotate, 1) * Y + np.take(Rotate, 2) * Z
     Ynew = np.take(Rotate, 3) * X + np.take(Rotate, 4) * Y + np.take(Rotate, 5) * Z
     Znew = np.take(Rotate, 6) * X + np.take(Rotate, 7) * Y + np.take(Rotate, 8) * Z
@@ -32,7 +29,7 @@ from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
 R = np.ones(63)
 phi = np.pi*np.ones(63)/2
 theta = np.arange(0,2*np.pi,0.1)
-angle = np.deg2rad(90)
+angle = np.deg2rad(45)
 X = R*np.sin(phi)*np.cos(theta)
 Y = R*np.sin(phi)*np.sin(theta)
 Z = R*np.cos(phi)

@@ -103,13 +103,13 @@ if (pwm_value <= 400)
   }
 void loop()
 {
-  incomingFlag = Serial.readString();
-  if (incomingFlag == "S"){
-    Stop();
-    Serial.println("Motor Stopped");
-    delay(1000);
-    RunServo();
-    }
+//  incomingFlag = Serial.readString();
+//  if (incomingFlag == "S"){
+//    Stop();
+//    Serial.println("Motor Stopped");
+//    delay(1000);
+//    RunServo();
+//    }
   goForward();
   RunServo();
 }

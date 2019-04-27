@@ -20,10 +20,7 @@ from mpl_toolkits import mplot3d
 
 #  Declarations/Variables
 PORT_NAME = '/dev/ttyUSB0' #  RPLidar Port Name
-DMAX = 500 #  ?
-IMIN = 0 #  ?
-IMAX = 50 #  ?
-Z = 0
+strPort = '/dev/ttyACM0' # MCU Port Name
 
 #####################
 
@@ -77,7 +74,7 @@ class AnalogPlot:
         self.ser.close()
 
     # Define point updater object
-def update_line(num, iterator, scatter,ax,Aport):
+def update_line(num, iterator, ax,Aport,X,Y,Z):
     scan = next(iterator)
     """
     Iterator returns 3 arguments:
@@ -108,68 +105,46 @@ def update_line(num, iterator, scatter,ax,Aport):
     R = np.array([meas[2] for meas in scan])
     phi = np.deg2rad(angle) # Test value in the phi angle, to be switched with Arduino object value
     
-    # Perform Spherical to Cartesian Conversion
-    X = R*np.sin(phi)*np.cos(theta)
-    Y = R*np.sin(phi)*np.sin(theta)
-    Z = R*np.cos(phi)
-    
+    # Perform Spherical to Cartesian Conversion and append overall lists
+    X.append(R*np.sin(phi)*np.cos(theta))
+    Y.append(R*np.sin(phi)*np.sin(theta))
+    Z.append(R*np.cos(phi))
+    # X = X[-20:]
+    # Y = Y[-20:]
+    # Z = Z[-20:]
+
+    # Draw x and y lists
     offsets = np.array([X,Y,Z])
     ax.clear()
-    ax.set_zlim(-2500, 2500)
-    ax.set_xlim(-2500, 2500)
-    ax.set_ylim(-2500, 2500)
-    scatter = ax.scatter3D(X, Y, Z)
-    return scatter, X, Y, Z
+    ax.scatter3D(X, Y, Z)
+    return X, Y, Z
 
-# Define Conduit Crawler Command Objects
-def ccforward():
-    print("Here at CCForward")
-
-def ccstop():
-    print("Here at CCStop")
-
-def ccbackward():
-    print("Here at ccbackward")
-
-def ccfbservostart():
-    print("Here at CBFBServoStart")
-    # Check for FB servo initialization properly?
-
-def ccfbservostop():
-    # Stuff goes here
-    print("Here at CCFBServoStop")
-
-def ccstopall():
-    print("Here at ccstopall")
-
-def ccstopserial():
-    print("Here at ccstopserial")
 
 # Setup Main run object
 def run():
-    strPort = '/dev/ttyACM0'
-    print('reading from serial port %s...' % strPort)
+    print('MCU being reading from serial port %s...' % strPort)
     Aport = serial.Serial(strPort, 115200)
-
-
+    print('RPlidar being reading from serial port %s...' % PORT_NAME)
     lidar = RPLidar(PORT_NAME) # Connect to the RPLidar Port
     iterator = lidar.iter_scans() # Object to pull scans from the RPLidar
     # An object to collect arduino readings must go here when thats complete!
 
     fig = plt.figure() # Create a figure object
     ax = fig.add_subplot(111, projection='3d') # Create plot axes object, 3D
-    scatter = ax.scatter3D(0, 0, 0)  # Define 3D Scatter Plot Object, This needs to be assigned to an object?
+    # Declare empty X,Y,Z
+    X = []
+    Y = []
+    Z = []
+    ax.scatter3D(X, Y, Z)  # initialize 3D Scatter Plot Object, does this need to be assigned to an object?
     ax.set_zlim(-2500, 2500)
     ax.set_xlim(-2500, 2500)
     ax.set_ylim(-2500, 2500)
 
     # Send Conduit Crawler Initialization Commands
-    ccfbservostart() # Start Feedback Servo Oscillation
-    # Other initialization commands go here?
 
     # Begin matplotlib animation function
-    # Save up to 50 samples and update interval is every 10ms
-    ani = animation.FuncAnimation(fig, update_line, fargs=(iterator, scatter, ax,Aport), interval=100)
+    # Update Interval is every 10ms
+    ani = animation.FuncAnimation(fig, update_line, fargs=(iterator, ax,Aport,X,Y,Z), interval=100)
     """
     animation.FuncAnimation arguments:
     class matplotlib.animation.FuncAnimation(fig, func, frames=None, init_func=None, fargs=None, save_count=None, **kwargs)
@@ -186,15 +161,10 @@ def run():
     save_count -> int, optional The number of values from frames to cache.
     """
 
-    # Command Conduit Crawler Motors to begin driving forward
-    ccforward()
-
     # Show the developed plot, this is called and remains open until a keyboard interrupt or plot is closed
     plt.show()
     
     # After Keyboard Interrupt occurs....
-    ccfbservostop() # Stop FB servo from oscillating
-    ccstop() # Stop CC motors
     lidar.stop() # RPLidar Scanner Stops
     lidar.stop_motor() # Scanner Motor Stops
     lidar.disconnect() # Disconnect from RPLidar
