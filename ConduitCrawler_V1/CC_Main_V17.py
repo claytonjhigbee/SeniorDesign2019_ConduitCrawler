@@ -38,58 +38,60 @@ def update_line(num, iterator,ax,Aport,lidar):
             Measured object distance related to the sensor's rotation center.
             In millimeter unit. Set to 0 when measurement is invalid. 
     """
-    # # Pass measurements to related variables
-    # Aport = serial.Serial(strPort, 115200)
-    # try:
-    #     # First Attempt to read an angle value from the MCU Serial Port
-    #     line = Aport.readline()
-    #     #Aport.write(b'value received')
-    #     line = str(line,"utf-8")
-    #     angle = int(re.sub("[^0-9]","",line))
-    # # If a misread occurs, try again
-    # except:
-    #     # Second attempt to read an angle value from the MCU Serial Port
-    #     # print("Angle misread, second attempt")
-    #     line = Aport.readline()
-    #     # Aport.write(b'value received')
-    #     line = str(line, "utf-8")
-    #     angle = int(re.sub("[^0-9]", "", line))
-
+    # Pass measurements to related variables
+    Aport = serial.Serial(strPort, 115200)
+    try:
+        # First Attempt to read an angle value from the MCU Serial Port
+        line = Aport.readline()
+        #Aport.write(b'value received')
+        line = str(line,"utf-8")
+        angle = int(re.sub("[^0-9]","",line))
+    # If a misread occurs, try again
+    except:
+        # Second attempt to read an angle value from the MCU Serial Port
+        # print("Angle misread, second attempt")
+        line = Aport.readline()
+        # Aport.write(b'value received')
+        line = str(line, "utf-8")
+        angle = int(re.sub("[^0-9]", "", line))
+    angle = (angle) * 0.3515625
     # Affine Transform:
-    anglecache = []
-    C = 0
-    # Test code
-    while C < 5:
-        Aport = serial.Serial(strPort, 115200)
-        try:
-            # First Attempt to read an angle value from the MCU Serial Port
-            line = Aport.readline()
-            # Aport.write(b'value received')
-            line = str(line, "utf-8")
-            angle = int(re.sub("[^0-9]", "", line))
-        # If a misread occurs, try again
-        except:
-            # Second attempt to read an angle value from the MCU Serial Port
-            # print("Angle misread, second attempt")
-            line = Aport.readline()
-            # Aport.write(b'value received')
-            line = str(line, "utf-8")
-            angle = int(re.sub("[^0-9]", "", line))
-        angle = (angle) * 0.3515625
-        anglecache.append(angle)
-        C = C + 1
-    print(anglecache)
-    angle = mode(anglecache)
-    print(angle)
-    C = 0
+    angle = np.deg2rad(angle)
+    # print(angle)
     theta  = np.array([(np.radians(meas[1])) for meas in scan])
     R = np.array([meas[2] for meas in scan])
     phi = np.pi/2
+
+    # Data manipulation
+    # test1 = theta[2]
+    # test2 = R[2]
+    # print(test1)
+    # print(test2)
+    newtheta = []
+    newR = []
+    for i in range(len(theta)):
+        if (theta[i] >= 0) & (theta[i] <= np.pi):
+            print(i)
+            print(theta[i])
+            print(R[i])
+            newtheta.append(theta[i])
+            newR.append(R[i])
+
+    newtheta = np.array(newtheta)
+    newR = np.array(newR)
     
+    # # Perform Spherical to Cartesian Conversion
+    # X = (np.sin(phi)*np.cos(newtheta))
+    # X = newR*X.astype(float)
+    # Y = np.sin(phi) * np.sin(newtheta)
+    # Y = newR*Y.astype(float)
+    # Z = np.cos(phi)
+    # Z = Z*newR.astype(int)
+
     # Perform Spherical to Cartesian Conversion
-    X = R*np.sin(phi)*np.cos(theta)
-    Y = R*np.sin(phi)*np.sin(theta)
-    Z = R*np.cos(phi)
+    X = newR * np.sin(phi) * np.cos(newtheta)
+    Y = newR * np.sin(phi) * np.sin(newtheta)
+    Z = newR * np.cos(phi)
 
     Rotate = np.array([[1, 0, 0], [0, np.cos(angle), -np.sin(angle)], [0, np.sin(angle), np.cos(angle)]])
     V = np.array([[X], [Y], [Z]])
@@ -100,10 +102,14 @@ def update_line(num, iterator,ax,Aport,lidar):
     Vnew = np.array([[Xnew], [Ynew], [Znew]])
     offsets = np.array([X,Y,Z])
     ax.clear()
-    ax.set_zlim(-250, 250)
-    ax.set_xlim(-250, 250)
-    ax.set_ylim(-250, 250)
-    ax.scatter3D(Xnew, Ynew, Znew)
+    myn = 200
+    ax.set_zlim(-1*myn, myn)
+    ax.set_xlim(-1*myn, myn)
+    ax.set_ylim(-1*myn, myn)
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+    ax.scatter3D(Xnew, Ynew, Znew, c='r',s = 1)
     return  Xnew, Ynew, Znew
 
 # Setup Main run object

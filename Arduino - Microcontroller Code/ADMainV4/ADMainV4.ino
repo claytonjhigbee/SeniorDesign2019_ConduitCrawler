@@ -87,13 +87,13 @@ void Stop()   //Stop Motors
 
 void RunServo(){
   analogWrite(FBServo,175);
-if (pwm_value >= 500)
+if (pwm_value >= 575)
 {
   analogWrite(FBServo,0);
   }
   delay(70);
 analogWrite(FBServo,200);
-if (pwm_value <= 400)
+if (pwm_value <= 525)
 {
   analogWrite(FBServo,0);
   }
@@ -113,8 +113,8 @@ void loop()
    }
    count = 0;
   }
-  goForward();
-  //RunServo();
+  //goForward();
+  RunServo();
 }
 
 void rising() {
