@@ -24,21 +24,29 @@ strPort = '/dev/ttyUSB0' # MCU Port Name
 def update_line(num, iterator,ax,Aport,lidar,Xs,Ys,Zs,i=[0]):
     checkbit = 0
     iterbit = 0
-    print(num)
     checkbit = str(num)
     checkbit = checkbit[-1]
     checkbit = int(checkbit)
-    print(checkbit)
-    if (checkbit == 0 | checkbit == 5):
+    if (checkbit == 0):
         iterbit = 0
-    if (checkbit == 1 | checkbit == 6):
+    if (checkbit == 1):
         iterbit = 1
-    if (checkbit == 2 | checkbit == 7):
+    if (checkbit == 2):
         iterbit = 2
-    if (checkbit == 3 | checkbit == 8):
+    if (checkbit == 3):
         iterbit = 3
-    if (checkbit == 4 | checkbit == 9):
+    if (checkbit == 4 ):
         iterbit = 4
+    if (checkbit == 5 ):
+        iterbit = 5
+    if (checkbit == 6 ):
+        iterbit = 6
+    if (checkbit == 7 ):
+        iterbit = 7
+    if (checkbit == 8 ):
+        iterbit = 8
+    if (checkbit == 9 ):
+        iterbit = 9
 
     try:
         scan = next(iterator)
@@ -103,8 +111,8 @@ def update_line(num, iterator,ax,Aport,lidar,Xs,Ys,Zs,i=[0]):
     Ynew = np.take(Rotate, 3) * X + np.take(Rotate, 4) * Y + np.take(Rotate, 5) * Z
     Znew = np.take(Rotate, 6) * X + np.take(Rotate, 7) * Y + np.take(Rotate, 8) * Z
 
-    rows = 5
-    columns = 150
+    rows = 2
+    columns = 500
     differenceX = columns - len(Xnew)
     storezeroX = np.zeros(shape=(1, differenceX))
     appendX = np.append(Xnew, storezeroX)
@@ -119,11 +127,9 @@ def update_line(num, iterator,ax,Aport,lidar,Xs,Ys,Zs,i=[0]):
     Xs[iterbit] = appendX
     Ys[iterbit] = appendY
     Zs[iterbit] = appendZ
-    print(Xs)
-    print(Ys)
-    print(Zs)
+    print(angle)
     ax.clear()
-    myn = 200
+    myn = 500
     ax.set_zlim(-1*myn, myn)
     ax.set_xlim(-1*myn, myn)
     ax.set_ylim(-1*myn, myn)
@@ -143,8 +149,8 @@ def run():
     # An object to collect arduino readings must go here when thats complete!
 
     # Declare empty Cartesien Coordinates
-    rows = 5
-    columns = 150
+    rows = 10
+    columns = 500
     Xs = np.zeros(shape = (rows,columns))
     Ys = np.zeros(shape = (rows,columns))
     Zs = np.zeros(shape = (rows,columns))
@@ -155,7 +161,7 @@ def run():
 
     # Begin matplotlib animation function
     # Save up to 50 samples and update interval is every 100ms
-    ani = animation.FuncAnimation(fig, update_line, fargs=(iterator, ax, Aport,lidar,Xs,Ys,Zs), interval=10)
+    ani = animation.FuncAnimation(fig, update_line, fargs=(iterator, ax, Aport,lidar,Xs,Ys,Zs), interval=5)
     """
     animation.FuncAnimation arguments:
     class matplotlib.animation.FuncAnimation(fig, func, frames=None, init_func=None, fargs=None, save_count=None, **kwargs)

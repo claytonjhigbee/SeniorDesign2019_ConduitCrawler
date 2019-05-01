@@ -7,15 +7,17 @@ void setup() {
 }
 
 void loop() {
-  if(testvariable >= 135){
-    testvariable = 45;
+  if(testvariable >= 550){
+    testvariable = 450;
   }
   else{
     testvariable = testvariable + 1;
   }
   val = testvariable;
-Serial.println(val);
-delay(200);
+  Serial.print("<");
+  Serial.print(val);
+  Serial.println(">");
+  delay(200);
 }
 
 void serialEvent(){
